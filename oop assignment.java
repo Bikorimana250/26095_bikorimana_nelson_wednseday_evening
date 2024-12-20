@@ -1,114 +1,140 @@
+/*
+ * Summary:
+ * This program demonstrates how to handle various exceptions in Java through practical examples. 
+ * Each exception is triggered in a realistic scenario and handled using try-catch blocks. 
+ * Both checked and unchecked exceptions are covered, with detailed comments for clarity.
+ */
 
 import java.io.*;
 import java.sql.*;
 
-public class ExceptionHandling {
+public class ExceptionHandlingExamples {
     public static void main(String[] args) {
-        iOException();
-        fileNotFoundException();
-        eOFException();
-        sQLException();
-        classNotFoundException();
-
-        arithmeticException();
-        nullPointerException();
-        arrayIndexOutOfBoundsException();
-        classCastException();
-        illegalArgumentException();
-        numberFormatException();
+        demonstrateIOException();
+        demonstrateFileNotFoundException();
+        demonstrateEOFException();
+        demonstrateSQLException();
+        demonstrateClassNotFoundException();
+        demonstrateArithmeticException();
+        demonstrateNullPointerException();
+        demonstrateArrayIndexOutOfBoundsException();
+        demonstrateClassCastException();
+        demonstrateIllegalArgumentException();
+        demonstrateNumberFormatException();
     }
 
-    private static void iOException() {
+    // Example of IOException
+    private static void demonstrateIOException() {
         try {
-            FileReader reader = new FileReader("nonexistent_file.txt");
+            FileWriter writer = new FileWriter("readonlyfile.txt");
+            writer.write("Testing IOException");
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("IOException caught: Unable to write to file.");
+        }
+    }
+
+    // Example of FileNotFoundException
+    private static void demonstrateFileNotFoundException() {
+        try {
+            FileReader reader = new FileReader("nonexistentfile.txt");
+            reader.read();
+        } catch (FileNotFoundException e) {
+            System.out.println("FileNotFoundException caught: File not found.");
         } catch (IOException e) {
             System.out.println("IOException caught: " + e.getMessage());
         }
     }
-    private static void fileNotFoundException() {
-        try {
-            FileInputStream file = new FileInputStream("missing_file.txt");
-        } catch (FileNotFoundException e) {
-            System.out.println("FileNotFoundException caught: " + e.getMessage());
-        }
-    }
 
-    private static void eOFException() {
-        try (DataInputStream dis = new DataInputStream(new ByteArrayInputStream(new byte[]{}))) {
-            dis.readInt();
+    // Example of EOFException
+    private static void demonstrateEOFException() {
+        try {
+            DataInputStream inputStream = new DataInputStream(new FileInputStream("datafile.txt"));
+            while (true) {
+                inputStream.readUTF();
+            }
         } catch (EOFException e) {
-            System.out.println("EOFException caught: " + e.getMessage());
+            System.out.println("EOFException caught: Reached end of file.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException caught: " + e.getMessage());
         }
     }
 
-    private static void sQLException() {
+    // Example of SQLException
+    private static void demonstrateSQLException() {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:invalid_url", "user", "password");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fakeDB", "root", "password");
+            Statement statement = connection.createStatement();
+            statement.executeQuery("INVALID SQL");
         } catch (SQLException e) {
             System.out.println("SQLException caught: " + e.getMessage());
         }
     }
 
-    private static void classNotFoundException() {
+    // Example of ClassNotFoundException
+    private static void demonstrateClassNotFoundException() {
         try {
-            Class.forName("com.nonexistent.Class");
+            Class.forName("com.example.NonExistentClass");
         } catch (ClassNotFoundException e) {
             System.out.println("ClassNotFoundException caught: " + e.getMessage());
         }
     }
 
-    private static void arithmeticException() {
+    // Example of ArithmeticException
+    private static void demonstrateArithmeticException() {
         try {
-            int result = 10 / 0;
+            int result = 50 / 0;
         } catch (ArithmeticException e) {
-            System.out.println("ArithmeticException caught: " + e.getMessage());
+            System.out.println("ArithmeticException caught: Cannot divide by zero.");
         }
     }
 
-    private static void nullPointerException() {
+    // Example of NullPointerException
+    private static void demonstrateNullPointerException() {
         try {
-            String str = null;
-            str.length();
+            String text = null;
+            System.out.println(text.length());
         } catch (NullPointerException e) {
-            System.out.println("NullPointerException caught: " + e.getMessage());
+            System.out.println("NullPointerException caught: Null reference accessed.");
         }
     }
 
-    private static void arrayIndexOutOfBoundsException() {
+    // Example of ArrayIndexOutOfBoundsException
+    private static void demonstrateArrayIndexOutOfBoundsException() {
         try {
-            int[] array = {1, 2, 3};
-            int value = array[5];
+            int[] numbers = {10, 20, 30};
+            System.out.println(numbers[5]);
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("ArrayIndexOutOfBoundsException caught: " + e.getMessage());
+            System.out.println("ArrayIndexOutOfBoundsException caught: Invalid array index.");
         }
     }
 
-    private static void classCastException() {
+    // Example of ClassCastException
+    private static void demonstrateClassCastException() {
         try {
-            Object obj = Integer.valueOf(10);
-            String str = (String) obj;
+            Object obj = new Double(3.14);
+            Integer num = (Integer) obj;
         } catch (ClassCastException e) {
-            System.out.println("ClassCastException caught: " + e.getMessage());
+            System.out.println("ClassCastException caught: Invalid type casting.");
         }
     }
 
-
-    private static void illegalArgumentException() {
+    // Example of IllegalArgumentException
+    private static void demonstrateIllegalArgumentException() {
         try {
             Thread thread = new Thread();
-            thread.setPriority(20);
+            thread.setPriority(11); // Invalid priority
         } catch (IllegalArgumentException e) {
-            System.out.println("IllegalArgumentException caught: " + e.getMessage());
+            System.out.println("IllegalArgumentException caught: Invalid argument passed.");
         }
     }
 
-    private static void numberFormatException() {
+    // Example of NumberFormatException
+    private static void demonstrateNumberFormatException() {
         try {
-            int num = Integer.parseInt("invalid_number");
+            int num = Integer.parseInt("InvalidNumber");
         } catch (NumberFormatException e) {
-            System.out.println("NumberFormatException caught: " + e.getMessage());
+            System.out.println("NumberFormatException caught: Invalid number format.");
         }
     }
 }
